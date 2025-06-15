@@ -24,7 +24,7 @@
 ### ✅ Chạy bằng Maven Wrapper
 
 🐳 Chạy bằng Docker
-```bash
+
 ./mvnw spring-boot:run
 mvn clean install -P dev
 docker build -t backend-service:latest .
