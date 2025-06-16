@@ -1,50 +1,81 @@
+# 🚀 Backend Service - Spring Boot Starter Guide
 
 ## 1️⃣ Prerequisite
 
-> Cài đặt các công cụ sau trước khi chạy ứng dụng:
+Trước khi chạy project, hãy đảm bảo:
 
-- Java 17+
-- Maven 3.5+
-- IntelliJ IDEA
-- Docker Desktop
+* ✅ Đã cài đặt **JDK 17+**
+* ✅ Đã cài **Maven 3.5+**
+* ✅ Sử dụng **IntelliJ IDEA** hoặc IDE bất kỳ
+* ✅ Đã cài đặt **Docker** và **Docker Compose**
+
+---
 
 ## 2️⃣ Tech Stack
 
-- Spring Boot 3.3.4
-- Spring Data Validation
-- Spring Data JPA
-- PostgreSQL / MySQL (tuỳ chọn)
-- Lombok
-- DevTools
-- Docker
-- Docker Compose
+| Công nghệ         | Mô tả                               |
+| ----------------- | ----------------------------------- |
+| Java              | ✅ Phiên bản 17 trở lên              |
+| Spring Boot       | ✅ Phiên bản `3.3.4`                 |
+| Maven             | ✅ Build tool chính (`mvnw`)         |
+| Spring Data JPA   | Kết nối CSDL                        |
+| Spring Validation | Kiểm tra dữ liệu đầu vào            |
+| MySQL/PostgreSQL  | Tuùy chọn CSDL                      |
+| Lombok            | Tự động hoá getter/setter/toString… |
+| DevTools          | Reload nhanh khi code thay đổi      |
+| Docker            | Đóng gói ứng dụng                   |
+| Docker Compose    | Chạy nhiều service cùng lúc         |
 
-## 3️⃣ Build & Run
+---
 
-### ✅ Chạy bằng Maven Wrapper
+## 3️⃣ Build & Run Application
 
-🐳 Chạy bằng Docker
+### ▶️ Chạy bằng Maven (local)
 
+```bash
+# Trong thư mục backend-service
 ./mvnw spring-boot:run
+```
+
+### 🟣 Chạy bằng Docker
+
+```bash
+# Build ứng dụng trước
 mvn clean install -P dev
+
+# Build Docker image
 docker build -t backend-service:latest .
+
+# Run container
 docker run -it -p 8080:8080 --name backend-service backend-service:latest
+```
 
-4️⃣ Test Health
-bash
-Copy
-Edit
-curl http://localhost:8080/actuator/health
-📥 Kết quả mong đợi:
+> 📌 Lưu ý: Nếu dùng Docker Compose, port có thể thay đổi (8081, 8083…)
 
-json
-Copy
-Edit
+---
+
+## 4️⃣ Kiểm tra hệ thống hoạt động
+
+Dùng `curl` hoặc trình duyệt để test `/actuator/health`:
+
+```bash
+curl --location 'http://localhost:8080/actuator/health'
+```
+
+### ✅ Response mong đợi:
+
+```json
 {
   "status": "UP"
 }
-🌐 Swagger UI
-Swagger UI: http://localhost:8080/swagger-ui.html
+```
 
-OpenAPI Docs: http://localhost:8080/v3/api-docs
+---
 
+## ✨ Ghi chú thêm
+
+* Swagger UI: `http://localhost:8080/swagger-ui.html`
+* Tài liệu API: `http://localhost:8080/v3/api-docs`
+* Profile mặc định: `dev`, có thể cấu hình trong `application-dev.yml`
+
+---
