@@ -1,4 +1,4 @@
-package vn.tayjava.config;
+package vn.Access_Control_List.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
