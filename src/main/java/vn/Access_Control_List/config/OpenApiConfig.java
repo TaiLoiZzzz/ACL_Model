@@ -21,10 +21,10 @@ import java.util.List;
 public class OpenApiConfig {
 
     @Bean
-    public GroupedOpenApi publicApi(@Value("${openapi.service.api-docs}") String apiDocs) {
+    public GroupedOpenApi publicApi(@Value("${openapi.service.api-docs:backend-service}") String apiDocs) {
         return GroupedOpenApi.builder()
                 .group(apiDocs) // /v3/api-docs/backend-service
-                .packagesToScan("vn.tayjava.controller")
+                .packagesToScan("vn.Access_Control_List.controller")
                 .build();
     }
 
