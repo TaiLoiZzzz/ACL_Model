@@ -2,6 +2,7 @@ package vn.Access_Control_List.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
@@ -14,9 +15,10 @@ import java.time.LocalDateTime;
 @Data
 public abstract class AbstractEntity<T> implements Serializable {
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private T id;
+    public T id;
 
     @CreatedBy
     @Column(name = "created_by")

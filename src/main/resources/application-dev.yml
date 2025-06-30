@@ -21,24 +21,7 @@ spring:
       hibernate:
         format_sql: true
 
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: tailoi1606@gmail.com
-    password: your_16_digit_app_password_here
-    default-encoding: UTF-8
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
-          ssl:
-            enable: false
-          connectiontimeout: 5000
-          timeout: 5000
-          writetimeout: 5000
+
 
 springdoc:
   api-docs:
