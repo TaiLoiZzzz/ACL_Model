@@ -24,7 +24,8 @@ logging:
 # JWT Configuration
 jwt:
   secret: mySecretKey1234567890123456789012345678901234567890123456789012345678901234567890
-  expiration: 86400000 # 24 hours in milliseconds
+  expiration: 900000 # 15 minutes in milliseconds (access token)
+  refresh-expiration: 604800000 # 7 days in milliseconds (refresh token)
 
 # OpenAPI Configuration
 openapi:

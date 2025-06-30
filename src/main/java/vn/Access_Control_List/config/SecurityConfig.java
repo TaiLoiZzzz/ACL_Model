@@ -45,7 +45,7 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         
                         // User management endpoints
-                        .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyAuthority("READ_USERS", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyAuthority("READ_USERS", "ROLE_ADMIN", "")
                         .requestMatchers(HttpMethod.POST, "/api/users").hasAnyAuthority("CREATE_USERS", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAnyAuthority("UPDATE_USERS", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAnyAuthority("DELETE_USERS", "ROLE_ADMIN")
@@ -57,10 +57,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/roles/**").hasAnyAuthority("DELETE_ROLES", "ROLE_ADMIN")
                         
                         // Permission management endpoints
-                        .requestMatchers(HttpMethod.GET, "/api/permissions/**").hasAnyAuthority("READ_PERMISSIONS", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/permissions").hasAnyAuthority("CREATE_PERMISSIONS", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/permissions/**").hasAnyAuthority("UPDATE_PERMISSIONS", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/permissions/**").hasAnyAuthority("DELETE_PERMISSIONS", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/permissions/**").hasAnyAuthority("PERMISSION_CREATE", "ROLE_ADMIN", "ROLE_USER")
+                        .requestMatchers(HttpMethod.POST, "/api/permissions").hasAnyAuthority("PERMISSION_CREATE", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/permissions/**").hasAnyAuthority("PERMISSION_UPDATE", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/permissions/**").hasAnyAuthority("PERMISSION_DELETE", "ROLE_ADMIN")
                         
                         // Profile endpoints - any authenticated user
                         .requestMatchers("/api/profile/**").authenticated()
@@ -75,23 +75,36 @@ public class SecurityConfig {
         return http.build();
     }
 
+    //CORS là cơ chế cho phép frontend ở domain khác gọi API backend.
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+        //Tạo mới đối tượng cấu hình CORS.
         CorsConfiguration configuration = new CorsConfiguration();
+
+        //Cho phép tất cả các origin (domain) gọi đến.
         configuration.setAllowedOriginPatterns(List.of("*"));
+
+        //Chỉ định những phương thức HTTP được phép gọi từ frontend.
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        //Cho phép mọi header trong request gửi lên (ví dụ: Authorization, Content-Type...)
         configuration.setAllowedHeaders(List.of("*"));
+
+        //Cho phép gửi cookie, token (khi dùng withCredentials ở frontend)
         configuration.setAllowCredentials(true);
-        
+
+        //Gán cấu hình CORS ở trên cho toàn bộ các endpoint (/**).
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
+    // Đây là một phương thức trả về AuthenticationProvider, dùng để xác thực người dùng trong Spring Security.
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
+        //Khi xác thực người dùng, hãy dùng BCryptPasswordEncoder để kiểm tra mật khẩu
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
