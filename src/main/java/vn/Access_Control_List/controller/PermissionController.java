@@ -31,7 +31,6 @@ public class PermissionController {
 
     @GetMapping
     @Operation(summary = "Get all permissions", description = "Retrieve paginated list of all permissions")
-    @PreAuthorize("hasAuthority('READ_PERMISSIONS') or hasRole('ADMIN')")
     public ResponseEntity<Page<PermissionResponse>> getAllPermissions(
             @Parameter(description = "Page number (0-based)") @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Page size") @RequestParam(defaultValue = "10") int size,
@@ -46,7 +45,6 @@ public class PermissionController {
 
     @GetMapping("/all")
     @Operation(summary = "Get all permissions without pagination", description = "Retrieve list of all permissions")
-    @PreAuthorize("hasAuthority('PERMISSIONS_READ') or hasRole('ADMIN')")
     public ResponseEntity<List<PermissionResponse>> getAllPermissionsWithoutPagination() {
         List<PermissionResponse> permissions = permissionService.getAllPermissions();
         return ResponseEntity.ok(permissions);
@@ -54,7 +52,6 @@ public class PermissionController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get permission by ID", description = "Retrieve a specific permission by their ID")
-    @PreAuthorize("hasAuthority('PERMISSIONS_READ') or hasRole('ADMIN')")
     public ResponseEntity<PermissionResponse> getPermissionById(@PathVariable Integer id) {
         PermissionResponse permission = permissionService.getPermissionById(id);
         return ResponseEntity.ok(permission);
@@ -62,7 +59,6 @@ public class PermissionController {
 
     @GetMapping("/resource/{resource}")
     @Operation(summary = "Get permissions by resource", description = "Retrieve permissions for a specific resource")
-    @PreAuthorize("hasAuthority('PERMISSIONS_READ') or hasRole('ADMIN')")
     public ResponseEntity<List<PermissionResponse>> getPermissionsByResource(@PathVariable String resource) {
         List<PermissionResponse> permissions = permissionService.getPermissionsByResource(resource);
         return ResponseEntity.ok(permissions);
@@ -70,7 +66,6 @@ public class PermissionController {
 
     @PostMapping
     @Operation(summary = "Create new permission", description = "Create a new permission")
-    @PreAuthorize("hasAuthority('PERMISSIONS_CREATE') or hasRole('ADMIN')")
     public ResponseEntity<PermissionResponse> createPermission(@Valid @RequestBody CreatePermissionRequest request) {
         PermissionResponse permission = permissionService.createPermission(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(permission);
@@ -78,7 +73,6 @@ public class PermissionController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update permission", description = "Update an existing permission")
-    @PreAuthorize("hasAuthority('PERMISSIONS_UPDATE') or hasRole('ADMIN')")
     public ResponseEntity<PermissionResponse> updatePermission(
             @PathVariable Integer id,
             @Valid @RequestBody CreatePermissionRequest request
@@ -89,7 +83,6 @@ public class PermissionController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete permission", description = "Delete a permission by ID")
-    @PreAuthorize("hasAuthority('PERMISSIONS_DELETE') or hasRole('ADMIN')")
     public ResponseEntity<Void> deletePermission(@PathVariable Integer id) {
         permissionService.deletePermission(id);
         return ResponseEntity.noContent().build();

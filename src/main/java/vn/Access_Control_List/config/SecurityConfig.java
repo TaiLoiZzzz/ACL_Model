@@ -45,7 +45,7 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         
                         // User management endpoints
-                        .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyAuthority("READ_USERS", "ROLE_ADMIN", "")
+                        .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyAuthority("READ_USERS", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/users").hasAnyAuthority("CREATE_USERS", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAnyAuthority("UPDATE_USERS", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAnyAuthority("DELETE_USERS", "ROLE_ADMIN")
@@ -57,10 +57,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/roles/**").hasAnyAuthority("DELETE_ROLES", "ROLE_ADMIN")
                         
                         // Permission management endpoints
-                        .requestMatchers(HttpMethod.GET, "/api/permissions/**").hasAnyAuthority("PERMISSION_CREATE", "ROLE_ADMIN", "ROLE_USER")
-                        .requestMatchers(HttpMethod.POST, "/api/permissions").hasAnyAuthority("PERMISSION_CREATE", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/permissions/**").hasAnyAuthority("PERMISSION_UPDATE", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/permissions/**").hasAnyAuthority("PERMISSION_DELETE", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/permissions/**").hasAnyAuthority("CREATE_PERMISSIONS", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/permissions").hasAnyAuthority("CREATE_PERMISSIONS", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/permissions/**").hasAnyAuthority("UPDATE_PERMISSIONS", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/permissions/**").hasAnyAuthority("DELETE_PERMISSIONS", "ROLE_ADMIN")
                         
                         // Profile endpoints - any authenticated user
                         .requestMatchers("/api/profile/**").authenticated()

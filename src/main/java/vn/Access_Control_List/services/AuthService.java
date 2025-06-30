@@ -14,7 +14,10 @@ import vn.Access_Control_List.controller.Request.RefreshTokenRequest;
 import vn.Access_Control_List.controller.Request.RegisterRequest;
 import vn.Access_Control_List.controller.Response.AuthResponse;
 import vn.Access_Control_List.model.RefreshTokenEntity;
+import vn.Access_Control_List.model.RoleEntity;
 import vn.Access_Control_List.model.UserEntity;
+import vn.Access_Control_List.model.UserHasRoleEntity;
+import vn.Access_Control_List.repository.RoleRepository;
 import vn.Access_Control_List.repository.UserRepository;
 
 import java.util.HashMap;
@@ -32,6 +35,8 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
+    private final RoleRepository roleRepository;
+
 
     public AuthResponse login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
@@ -74,7 +79,7 @@ public class AuthService {
     }
 
     public AuthResponse register(RegisterRequest request) {
-        // Check if username or email already exists
+        // 1. Kiểm tra trùng username/email
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new RuntimeException("Username is already taken");
         }
@@ -82,7 +87,11 @@ public class AuthService {
             throw new RuntimeException("Email is already in use");
         }
 
-        // Create new user
+        // 2. Lấy role mặc định VIEWER
+        RoleEntity viewerRole = roleRepository.findByNameWithPermissions("VIEWER")
+                .orElseThrow(() -> new RuntimeException("Default role VIEWER not found"));
+
+        // 3. Tạo UserEntity (chưa lưu ngay)
         UserEntity user = UserEntity.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
@@ -91,12 +100,28 @@ public class AuthService {
                 .isActive(true)
                 .build();
 
+        // 4. Tạo bản ghi trung gian UserHasRole
+        UserHasRoleEntity userRole = UserHasRoleEntity.builder()
+                .user(user)
+                .role(viewerRole)
+                .build();
+
+        user.setRoles(Set.of(userRole));
+
+        // 5. Lưu user + role
         user = userRepository.save(user);
 
-        // Generate tokens for newly registered user
+        // 6. Lấy roles & permissions để đưa vào token
+        Set<String> roles = Set.of(viewerRole.getName());
+        Set<String> permissions = viewerRole.getPermissions().stream()
+                .map(p -> p.getPermission().getName())
+                .collect(Collectors.toSet());
+
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("userId", user.getId());
         extraClaims.put("email", user.getEmail());
+        extraClaims.put("roles", roles);
+        extraClaims.put("permissions", permissions);
 
         String accessToken = jwtUtil.generateToken(user.getUsername(), extraClaims);
         RefreshTokenEntity refreshToken = refreshTokenService.createRefreshToken(user);
@@ -108,10 +133,11 @@ public class AuthService {
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .fullName(user.getFullName())
-                .roles(Set.of()) // New user has no roles initially
-                .permissions(Set.of()) // New user has no permissions initially
+                .roles(roles)
+                .permissions(permissions)
                 .build();
     }
+
 
     public AuthResponse refreshToken(RefreshTokenRequest request) {
         RefreshTokenEntity refreshTokenEntity = refreshTokenService.validateRefreshToken(request.getRefreshToken());
