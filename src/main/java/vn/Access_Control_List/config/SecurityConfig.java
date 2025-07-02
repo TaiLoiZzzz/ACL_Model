@@ -62,7 +62,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/permissions/**").hasAnyAuthority("UPDATE_PERMISSIONS", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/permissions/**").hasAnyAuthority("DELETE_PERMISSIONS", "ROLE_ADMIN")
                         
-                        // Profile endpoints - any authenticated user
                         .requestMatchers("/api/profile/**").authenticated()
                         
                         // All other endpoints require authentication

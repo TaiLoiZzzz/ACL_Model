@@ -34,6 +34,10 @@ public class PermissionEntity extends AbstractEntity<Integer> {
     @OneToMany(mappedBy = "permission", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<RoleHasPermission> roles;
 
+    @OneToMany(mappedBy = "permission", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<GroupHasPermission> groups;
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
