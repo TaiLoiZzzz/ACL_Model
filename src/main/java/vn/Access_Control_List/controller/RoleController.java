@@ -32,7 +32,6 @@ public class RoleController {
 
     @GetMapping
     @Operation(summary = "Get all roles", description = "Retrieve paginated list of all roles")
-    @PreAuthorize("hasAuthority('READ_ROLES') or hasRole('ADMIN')")
     public ResponseEntity<Page<RoleResponse>> getAllRoles(
             @Parameter(description = "Page number (0-based)") @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Page size") @RequestParam(defaultValue = "10") int size,
@@ -47,7 +46,6 @@ public class RoleController {
 
     @GetMapping("/active")
     @Operation(summary = "Get all active roles", description = "Retrieve list of all active roles")
-    @PreAuthorize("hasAuthority('READ_ROLES') or hasRole('ADMIN')")
     public ResponseEntity<List<RoleResponse>> getAllActiveRoles() {
         List<RoleResponse> roles = roleService.getAllActiveRoles();
         return ResponseEntity.ok(roles);
@@ -55,7 +53,6 @@ public class RoleController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get role by ID", description = "Retrieve a specific role by their ID")
-    @PreAuthorize("hasAuthority('READ_ROLES') or hasRole('ADMIN')")
     public ResponseEntity<RoleResponse> getRoleById(@PathVariable Integer id) {
         RoleResponse role = roleService.getRoleById(id);
         return ResponseEntity.ok(role);
@@ -63,7 +60,6 @@ public class RoleController {
 
     @PostMapping
     @Operation(summary = "Create new role", description = "Create a new role with specified permissions")
-    @PreAuthorize("hasAuthority('CREATE_ROLES') or hasRole('ADMIN')")
     public ResponseEntity<RoleResponse> createRole(@Valid @RequestBody CreateRoleRequest request) {
         RoleResponse role = roleService.createRole(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(role);
@@ -71,7 +67,6 @@ public class RoleController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update role", description = "Update an existing role")
-    @PreAuthorize("hasAuthority('UPDATE_ROLES') or hasRole('ADMIN')")
     public ResponseEntity<RoleResponse> updateRole(
             @PathVariable Integer id,
             @Valid @RequestBody CreateRoleRequest request
@@ -82,7 +77,6 @@ public class RoleController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete role", description = "Delete a role by ID")
-    @PreAuthorize("hasAuthority('DELETE_ROLES') or hasRole('ADMIN')")
     public ResponseEntity<Void> deleteRole(@PathVariable Integer id) {
         roleService.deleteRole(id);
         return ResponseEntity.noContent().build();
@@ -90,7 +84,6 @@ public class RoleController {
 
     @PostMapping("/{id}/permissions")
     @Operation(summary = "Assign permissions to role", description = "Assign permissions to a specific role")
-    @PreAuthorize("hasAuthority('UPDATE_ROLES') or hasRole('ADMIN')")
     public ResponseEntity<RoleResponse> assignPermissions(
             @PathVariable Integer id,
             @RequestBody Set<Integer> permissionIds

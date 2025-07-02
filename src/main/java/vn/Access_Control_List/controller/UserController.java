@@ -31,7 +31,6 @@ public class UserController {
 
     @GetMapping
     @Operation(summary = "Get all users", description = "Retrieve paginated list of all users")
-    @PreAuthorize("hasAuthority('READ_USERS') or hasRole('ADMIN')")
     public ResponseEntity<Page<UserResponse>> getAllUsers(
             @Parameter(description = "Page number (0-based)") @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Page size") @RequestParam(defaultValue = "10") int size,
@@ -46,7 +45,6 @@ public class UserController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get user by ID", description = "Retrieve a specific user by their ID")
-    @PreAuthorize("hasAuthority('READ_USERS') or hasRole('ADMIN')")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
         UserResponse user = userService.getUserById(id);
         return ResponseEntity.ok(user);
@@ -54,7 +52,6 @@ public class UserController {
 
     @PostMapping
     @Operation(summary = "Create new user", description = "Create a new user with specified roles")
-    @PreAuthorize("hasAuthority('CREATE_USERS') or hasRole('ADMIN')")
     public ResponseEntity<UserResponse> createUser(@Valid @RequestBody CreateUserRequest request) {
         UserResponse user = userService.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
@@ -62,7 +59,6 @@ public class UserController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update user", description = "Update an existing user")
-    @PreAuthorize("hasAuthority('UPDATE_USERS') or hasRole('ADMIN')")
     public ResponseEntity<UserResponse> updateUser(
             @PathVariable Long id,
             @Valid @RequestBody CreateUserRequest request
@@ -73,7 +69,6 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete user", description = "Delete a user by ID")
-    @PreAuthorize("hasAuthority('DELETE_USERS') or hasRole('ADMIN')")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
@@ -81,7 +76,6 @@ public class UserController {
 
     @PostMapping("/{id}/roles")
     @Operation(summary = "Assign roles to user", description = "Assign roles to a specific user")
-    @PreAuthorize("hasAuthority('UPDATE_USERS') or hasRole('ADMIN')")
     public ResponseEntity<UserResponse> assignRoles(
             @PathVariable Long id,
             @RequestBody Set<Integer> roleIds

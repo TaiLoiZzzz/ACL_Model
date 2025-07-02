@@ -31,6 +31,9 @@ public class GroupEntity extends AbstractEntity<Integer> {
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<GroupHasUserEntity> users;
 
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<GroupHasPermission> permissions;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
