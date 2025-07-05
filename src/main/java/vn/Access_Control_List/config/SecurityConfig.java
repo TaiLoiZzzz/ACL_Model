@@ -43,7 +43,8 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/post/get/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/post/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/post/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_AUTHOR")
                         // User management endpoints
                         .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyAuthority( "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/users").hasAnyAuthority( "ROLE_ADMIN")

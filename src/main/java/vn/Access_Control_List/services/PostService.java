@@ -9,11 +9,12 @@ import vn.Access_Control_List.model.UserEntity;
 
 public interface PostService {
     public Page<PostResponse> getPosts(Pageable pageable);
-    public PostResponse getPostsById(Long id);
+    public PostResponse getPostById(Long id);
     public PostResponse CreatePost(PostRequest post, UserEntity user);
     public PostResponse updatePost(Long id,PostRequest post, String name);
     public boolean isPostAuthor(Long postId, String username);  // Đảm bảo là PUBLIC
     public void DeletePost(Long Id);
     public PostResponse UpdateStatusPost(Long id, String Status);
+
 
 }
