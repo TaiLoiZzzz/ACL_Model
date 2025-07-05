@@ -18,6 +18,7 @@ import vn.Access_Control_List.repository.UserRepository;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,6 +34,9 @@ public class UserService {
     public Page<UserResponse> getAllUsers(Pageable pageable) {
         return userRepository.findAll(pageable)
                 .map(this::convertToUserResponse);
+    }
+    public Optional<UserEntity> findUserByUserName(String userName) {
+            return userRepository.findByUsername(userName);
     }
 
     public UserResponse getUserById(Long id) {

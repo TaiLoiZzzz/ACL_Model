@@ -43,26 +43,29 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/error").permitAll()
-                        
+                        .requestMatchers(HttpMethod.GET, "/api/post/get/**").permitAll()
                         // User management endpoints
-                        .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyAuthority("READ_USERS", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/users").hasAnyAuthority("CREATE_USERS", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAnyAuthority("UPDATE_USERS", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAnyAuthority("DELETE_USERS", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyAuthority( "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/users").hasAnyAuthority( "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAnyAuthority( "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAnyAuthority( "ROLE_ADMIN")
                         
                         // Role management endpoints
-                        .requestMatchers(HttpMethod.GET, "/api/roles/**").hasAnyAuthority("READ_ROLES", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/roles").hasAnyAuthority("CREATE_ROLES", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/roles/**").hasAnyAuthority("UPDATE_ROLES", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/roles/**").hasAnyAuthority("DELETE_ROLES", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/roles/**").hasAnyAuthority( "ROLE_ADMIN","user:read_all")
+                        .requestMatchers(HttpMethod.POST, "/api/roles").hasAnyAuthority( "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/roles/**").hasAnyAuthority( "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/roles/**").hasAnyAuthority( "ROLE_ADMIN")
                         
                         // Permission management endpoints
-                        .requestMatchers(HttpMethod.GET, "/api/permissions/**").hasAnyAuthority("CREATE_PERMISSIONS", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/permissions").hasAnyAuthority("CREATE_PERMISSIONS", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/permissions/**").hasAnyAuthority("UPDATE_PERMISSIONS", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/permissions/**").hasAnyAuthority("DELETE_PERMISSIONS", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/permissions/**").hasAnyAuthority( "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/permissions").hasAnyAuthority( "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/permissions/**").hasAnyAuthority( "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/permissions/**").hasAnyAuthority( "ROLE_ADMIN")
 
-                        .requestMatchers(HttpMethod.GET,"/api/export/**").hasAnyAuthority("READ_EXPORT_USERS", "ROLE_ADMIN")
+                        //Post management endpoint
+                        .requestMatchers("/api/post/**").hasAnyAuthority( "ROLE_AUTHOR")
+
+
                         .requestMatchers("/api/profile/**").authenticated()
                         
                         // All other endpoints require authentication
