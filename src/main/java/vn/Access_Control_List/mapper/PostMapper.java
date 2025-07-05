@@ -3,13 +3,8 @@ package vn.Access_Control_List.mapper;
 import org.springframework.stereotype.Component;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import vn.Access_Control_List.model.PostEntity;
-import vn.Access_Control_List.model.UserEntity;
-import vn.Access_Control_List.model.CategoriesEntity; // Import CategoriesEntity
-import vn.Access_Control_List.model.PostHasCategoriesEntity; // Import PostHasCategoriesEntity
-import vn.Access_Control_List.controller.Response.PostResponse;
-import vn.Access_Control_List.controller.Response.UserPostResponse;
-import vn.Access_Control_List.controller.Response.CategoriesResponse; // Import CategoriesResponse
+import vn.Access_Control_List.controller.Response.*;
+import vn.Access_Control_List.model.*;
 
 import java.util.List;
 import java.util.Set;
@@ -84,4 +79,58 @@ public class PostMapper {
                 .collect(Collectors.toList());
         return new PageImpl<>(content, entityPage.getPageable(), entityPage.getTotalElements());
     }
+    // Phương thức map Page<CommentEntity> sang Page<CommentResponse>
+    public Page<CommentResponse> toCommentResponsePage(Page<CommentEntity> entityPage) {
+        if (entityPage == null) {
+            return Page.empty();
+        }
+        List<CommentResponse> content = entityPage.getContent().stream()
+                .map(this::toCommentResponse)
+                .collect(Collectors.toList());
+        return new PageImpl<>(content, entityPage.getPageable(), entityPage.getTotalElements());
+    }
+
+    // Phương thức map từ UserEntity sang UserCommentResponse
+    public UserCommentResponse toUserCommentResponse(UserEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+        return new UserCommentResponse(entity);
+    }
+
+    // Phương thức map từ CommentEntity sang CommentResponse (đệ quy)
+    public CommentResponse toCommentResponse(CommentEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        CommentResponse response = new CommentResponse();
+        response.setId(entity.getId());
+        response.setContent(entity.getContent());
+        response.setAuthorName(entity.getAuthorName());
+        response.setAuthorEmail(entity.getAuthorEmail());
+        response.setIsApproved(entity.getIsApproved());
+
+        if (entity.getUser() != null) {
+            response.setUser(toUserCommentResponse(entity.getUser()));
+        }
+
+        if (entity.getParentComment() != null) {
+            response.setParentCommentId(entity.getParentComment().getId());
+        }
+
+        // Map các bình luận con (replies) một cách đệ quy
+        // Đảm bảo CommentEntity.getReplies() đã được tải (FetchType.EAGER hoặc trong cùng transaction)
+        // để tránh LazyInitializationException.
+        if (entity.getReplies() != null && !entity.getReplies().isEmpty()) {
+            response.setReplies(entity.getReplies().stream()
+                    .map(this::toCommentResponse) // Gọi đệ quy phương thức này
+                    .collect(Collectors.toSet()));
+        } else {
+            response.setReplies(new HashSet<>());
+        }
+
+        return response;
+    }
+
 }

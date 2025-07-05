@@ -61,7 +61,9 @@ public class PostController {
     @GetMapping("/get/{id}") // <<< Sửa đổi ở đây: dùng {id}
     @Operation(summary = "Lấy một bài post theo ID")
     private PostResponse GetPostById(@PathVariable("id") Long id){
-        return postService.getPostsById(id);
+        PostResponse postById;
+        postById = postService.getPostById(id);
+        return postById;
     }
 
 

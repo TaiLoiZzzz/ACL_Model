@@ -61,8 +61,8 @@ public class PostServicelmpl implements PostService {
     }
 
     @Override
-    public PostResponse getPostsById(Long id) {
-        return postRepository.findById(id).map(postMapper::toPostResponse).orElse(null);
+    public PostResponse getPostById(Long id) {
+        return postRepository.findById(id).map(postMapper::toPostResponse).orElseThrow(()-> new RuntimeException("Khong Tim thay"));
     }
 
     @Override
