@@ -65,7 +65,6 @@ public class SecurityConfig {
                         //Post management endpoint
                         .requestMatchers("/api/post/**").hasAnyAuthority( "ROLE_AUTHOR")
 
-
                         .requestMatchers("/api/profile/**").authenticated()
                         
                         // All other endpoints require authentication
