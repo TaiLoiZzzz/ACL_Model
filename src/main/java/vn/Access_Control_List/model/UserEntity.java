@@ -41,6 +41,13 @@ public class UserEntity extends AbstractEntity<Long>{
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<GroupHasUserEntity> groups;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<PostEntity> posts;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<CommentEntity> comments;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -88,8 +88,8 @@ public class AuthService {
         }
 
         // 2. Lấy role mặc định VIEWER
-        RoleEntity viewerRole = roleRepository.findByNameWithPermissions("VIEWER")
-                .orElseThrow(() -> new RuntimeException("Default role VIEWER not found"));
+        RoleEntity viewerRole = roleRepository.findByNameWithPermissions("AUTHOR")
+                .orElseThrow(() -> new RuntimeException("Default role AUTHOR not found"));
 
         // 3. Tạo UserEntity (chưa lưu ngay)
         UserEntity user = UserEntity.builder()
