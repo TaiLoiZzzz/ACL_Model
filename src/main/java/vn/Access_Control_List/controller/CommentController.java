@@ -77,6 +77,9 @@ public class CommentController {
         CommentResponse newComment = commentService.createComment(postId, commentRequest, currentUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(newComment); // Trả về 201 Created
 
+
+
+
     }
     @DeleteMapping("/comments/{id}") // Endpoint để xóa bình luận
     @Operation(summary = "Xóa một bình luận")
